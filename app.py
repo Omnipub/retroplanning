@@ -367,6 +367,11 @@ def a_propos():
     return render_template("a_propos.html")
 
 
+@app.route("/ressources")
+def ressources():
+    return render_template("ressources.html")
+
+
 @app.route("/formulaire")
 def index():
     modele_slug = request.args.get("modele")

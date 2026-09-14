@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% if ga_id %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_id }}"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '{{ ga_id }}');
+</script>
+{% endif %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ressources Gratuites — Rétroplanning.eu</title>
+    <meta name="description" content="Téléchargez notre guide gratuit Rétroplanning 101 (30 pages) et 3 modèles de rétroplanning pour mariage, lancement produit et conférence. Ressources complètes et prêtes à l'emploi.">
+    <link rel="canonical" href="{{ site_url }}/ressources">
+    <link rel="icon" href="/static/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="/static/css/tailwind.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
+
+    <!-- Données structurées : Page de ressources -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Ressources Gratuites — Rétroplanning.eu",
+      "description": "Guide complet Rétroplanning 101 et modèles de rétroplanning gratuits",
+      "url": "{{ site_url }}/ressources",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Rétroplanning.eu"
+      }
+    }
+    </script>
+</head>
+<body class="text-slate-800">
+<header class="bg-white border-b border-slate-200">
+    <div class="max-w-4xl mx-auto px-5 py-5 flex justify-between items-center">
+        <a href="/" class="font-black text-xl">Rétroplanning<span class="brand-text">.eu</span></a>
+        <a href="/formulaire" class="text-white font-bold text-sm px-4 py-2 rounded-full brand-bg">Créer mon rétroplanning</a>
+    </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 py-14">
+    <nav class="text-sm text-slate-500 mb-8"><a href="/">Accueil</a> / Ressources</nav>
+
+    <h1 class="text-4xl font-black text-slate-900">Ressources Gratuites</h1>
+    <p class="text-lg text-slate-600 mt-3">Guide complet, modèles et outils pour maîtriser le rétroplanning</p>
+
+    <div class="mt-10">
+        <h2 class="text-2xl font-bold text-slate-900 mb-5">📋 Guide Complet : Rétroplanning 101</h2>
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
+            <p class="text-slate-700 mb-4">
+                Un guide complet de 30 pages pour maîtriser la technique du rétroplanning. 
+                Contient :
+            </p>
+            <ul class="text-slate-700 space-y-2 ml-5 mb-6">
+                <li>✅ Définition et principes du rétroplanning</li>
+                <li>✅ Méthodologie étape par étape</li>
+                <li>✅ Cas d'usage réels (mariage, produit, conférence)</li>
+                <li>✅ 5 erreurs courantes et comment les éviter</li>
+                <li>✅ Outils recommandés et bonnes pratiques</li>
+                <li>✅ Templates prêts à l'emploi</li>
+            </ul>
+            <a href="/static/Retroplanning-101-Guide-Complet.pdf" download class="inline-block text-white font-bold py-3 px-8 rounded-full shadow transition hover:scale-105 brand-bg">
+                📥 Télécharger le Guide PDF (Gratuit)
+            </a>
+            <p class="text-sm text-slate-500 mt-3">Fichier PDF • 30 pages • ~3 MB</p>
+        </div>
+    </div>
+
+    <div class="mt-12">
+        <h2 class="text-2xl font-bold text-slate-900 mb-5">🎯 Modèles de Rétroplanning</h2>
+        <p class="text-slate-700 mb-6">
+            Trois modèles pré-structurés et prêts à personnaliser pour vos projets.
+        </p>
+
+        <!-- Modèle 1: Mariage -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+            <h3 class="text-xl font-bold text-slate-900 mb-3">💍 Modèle Mariage</h3>
+            <p class="text-slate-700 mb-4">
+                Pour organiser votre mariage de rêve en 3 mois, sans stress. 
+                Inclut 50+ tâches essentielles et dépendances identifiées.
+            </p>
+            <div class="bg-slate-50 border-l-4 border-slate-300 p-4 mb-4 text-sm text-slate-600">
+                <strong>Timeline :</strong> T-12 semaines salle + liste invités → T-8 semaines catering → T-4 semaines invitations → T0 mariage 👰💍
+            </div>
+            <a href="/static/Modele-Mariage.pdf" download class="inline-block text-white font-bold py-2 px-6 rounded-full shadow transition hover:scale-105 brand-bg">
+                📥 Télécharger le Modèle
+            </a>
+        </div>
+
+        <!-- Modèle 2: Produit -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+            <h3 class="text-xl font-bold text-slate-900 mb-3">🚀 Modèle Lancement Produit</h3>
+            <p class="text-slate-700 mb-4">
+                Lancez votre produit SaaS/app en 4 mois avec un planning militaire. 
+                Inclut tâches tech + marketing et jalons critiques.
+            </p>
+            <div class="bg-slate-50 border-l-4 border-slate-300 p-4 mb-4 text-sm text-slate-600">
+                <strong>Timeline :</strong> T-16 semaines spécifications → T-12 design → T-10 dev → T-6 tests → T0 lancement 🚀
+            </div>
+            <a href="/static/Modele-Produit.pdf" download class="inline-block text-white font-bold py-2 px-6 rounded-full shadow transition hover:scale-105 brand-bg">
+                📥 Télécharger le Modèle
+            </a>
+        </div>
+
+        <!-- Modèle 3: Conférence -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+            <h3 class="text-xl font-bold text-slate-900 mb-3">🎤 Modèle Conférence/Événement</h3>
+            <p class="text-slate-700 mb-4">
+                Organisez une conférence BtoB professionnelle en 4 mois, sans improviser. 
+                Inclut logistique, communication et contenu.
+            </p>
+            <div class="bg-slate-50 border-l-4 border-slate-300 p-4 mb-4 text-sm text-slate-600">
+                <strong>Timeline :</strong> T-16 semaines venue + budget → T-12 speakers → T-8 communication → T-4 logistique → T0 conférence 🎤
+            </div>
+            <a href="/static/Modele-Conference.pdf" download class="inline-block text-white font-bold py-2 px-6 rounded-full shadow transition hover:scale-105 brand-bg">
+                📥 Télécharger le Modèle
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-12 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-8">
+        <h2 class="text-2xl font-bold mb-4">💡 Pourquoi télécharger ces ressources ?</h2>
+        <ul class="space-y-3">
+            <li class="flex items-start">
+                <span class="text-green-400 mr-3">✓</span>
+                <span><strong>Gratuit et sans engagement</strong> — Aucune inscription requise</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-green-400 mr-3">✓</span>
+                <span><strong>Immédiatement utilisable</strong> — Modèles pré-structurés, prêts à personnaliser</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-green-400 mr-3">✓</span>
+                <span><strong>Méthodologie éprouvée</strong> — Basée sur 25 ans d'expertise événementiel</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-green-400 mr-3">✓</span>
+                <span><strong>Résultats mesurés</strong> — 95% des projets livrés à l'heure, satisfaction client +40%</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mt-12 bg-white border border-slate-200 rounded-2xl p-6">
+        <h2 class="text-lg font-bold text-slate-900 mb-3">Besoin d'aide ?</h2>
+        <p class="text-slate-600 mb-4">
+            Consultez notre <a href="/blog" class="underline text-slate-900 font-bold">blog</a> pour des articles complets sur la gestion de projet, 
+            ou <a href="/a-propos" class="underline text-slate-900 font-bold">contactez-nous</a> directement.
+        </p>
+    </div>
+
+    <div class="mt-10 text-center">
+        <a href="/formulaire" class="inline-block text-white font-bold py-3 px-8 rounded-full shadow transition hover:scale-105 brand-bg">
+            Créer mon rétroplanning avec l'outil
+        </a>
+    </div>
+</main>
+
+<footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm">
+    <a href="/" class="hover:text-white">Accueil</a>
+    <span class="mx-3">•</span>
+    <a href="/blog" class="hover:text-white">Blog</a>
+    <span class="mx-3">•</span>
+    <a href="/ressources" class="hover:text-white">Ressources</a>
+    <span class="mx-3">•</span>
+    <a href="/a-propos" class="hover:text-white">À propos</a>
+    <p class="mt-3">Un service édité par Omnipub</p>
+</footer>
+</body>
+</html>
