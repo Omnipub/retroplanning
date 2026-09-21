@@ -372,6 +372,11 @@ def ressources():
     return render_template("ressources.html")
 
 
+@app.route("/retroplanning-evenementiel")
+def retroplanning_evenementiel():
+    return render_template("retroplanning_evenementiel.html")
+
+
 @app.route("/formulaire")
 def index():
     modele_slug = request.args.get("modele")
@@ -762,6 +767,7 @@ def llms_txt():
         "## Pages principales",
         "",
         "- [Accueil](" + SITE_URL + "/) : présentation de l'outil et des tarifs.",
+        "- [Rétroplanning événementiel](" + SITE_URL + "/retroplanning-evenementiel) : guide pour organiser un événement à rebours de sa date.",
         "- [Choix du modèle](" + SITE_URL + "/modeles) : modèles pré-remplis par type de projet.",
         "- [Créer un rétroplanning](" + SITE_URL + "/formulaire) : formulaire de génération.",
         "- [Tarifs](" + SITE_URL + "/tarifs) : détail des 3 formules.",
@@ -807,8 +813,12 @@ def sitemap():
 
     urls = [
         (SITE_URL + "/", "weekly", "1.0"),
-        (SITE_URL + "/formulaire", "monthly", "0.8"),
+        (SITE_URL + "/retroplanning-evenementiel", "monthly", "0.9"),
+        (SITE_URL + "/modeles", "monthly", "0.8"),
+        (SITE_URL + "/tarifs", "monthly", "0.7"),
         (SITE_URL + "/blog", "weekly", "0.9"),
+        (SITE_URL + "/ressources", "monthly", "0.6"),
+        (SITE_URL + "/a-propos", "yearly", "0.4"),
     ]
 
     try:
