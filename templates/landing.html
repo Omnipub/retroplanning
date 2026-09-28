@@ -61,8 +61,8 @@
       "operatingSystem": "Web",  
       "offers": {  
         "@type": "AggregateOffer",  
-        "lowPrice": "2.00",  
-        "highPrice": "19.90",  
+        "lowPrice": "2.40",  
+        "highPrice": "23.88",  
         "priceCurrency": "EUR",  
         "offerCount": "3"  
       },  
@@ -145,15 +145,14 @@
         <div class="max-w-5xl mx-auto text-center">
 
             <h1 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
-                Créez votre rétroplanning
-                <span class="text-teal-600">en ligne simplement</span>
+                Votre rétroplanning en ligne,
+                <span class="text-teal-600">clair et prêt à partager</span>
             </h1>
 
             <p class="text-lg md:text-xl text-slate-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Générez en quelques minutes un rétroplanning clair et structuré pour votre
-                événement, votre projet ou votre organisation. Définissez votre date finale,
-                vos étapes et vos contraintes : Retroplanning.eu vous aide à construire votre
-                planning à rebours.
+                Présentez les étapes de votre projet à votre client ou à votre équipe.
+                Renseignez vos dates, personnalisez vos couleurs et obtenez une frise
+                en PNG haute définition, prête à intégrer dans vos présentations et devis.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -163,26 +162,41 @@
                     Créer mon rétroplanning  
                 </a>
 
-                <a href="/blog"  
-                   class="inline-block bg-white hover:bg-slate-100 text-slate-700 font-bold py-4 px-10 rounded-full border border-slate-300 shadow-sm transition">  
-                    Blog &amp; Guides  
-                </a>
-
-                <a href="/ressources"
+                <a href="#exemple-retroplanning"
                    class="inline-block bg-white hover:bg-slate-100 text-slate-700 font-bold py-4 px-10 rounded-full border border-slate-300 shadow-sm transition">
-                    Ressources gratuites
-                </a>
-
-                <a href="mailto:{{ contact_email_obfuscated }}?subject=Demande%20d%27information%20R%C3%A9troplanning"
-                   class="inline-block bg-white hover:bg-slate-100 text-slate-700 font-bold py-4 px-10 rounded-full border border-slate-300 shadow-sm transition">
-                    Nous contacter
+                    Voir un exemple
                 </a>
 
             </div>
 
             <p class="mt-4 text-sm text-slate-500">
-                Dès 2€ à l'acte • Abonnements dès 9,90€ HT/mois • <a href="/tarifs" class="underline hover:text-slate-700">Voir tous les tarifs</a>
+                2 € HT (2,40 € TTC) à l'acte • Abonnements dès 9,90 € HT (11,88 € TTC)/mois • <a href="/tarifs" class="underline hover:text-slate-700">Voir tous les tarifs</a>
             </p>
+
+            <p class="mt-4 text-sm text-slate-500">
+                Jusqu’à 6 étapes clés + la date finale · Couleurs et coordonnées personnalisables
+            </p>
+
+            <figure id="exemple-retroplanning" class="mt-10 bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                <a href="{{ url_for('static', filename='img/exemple-retroplanning.png') }}"
+                   aria-label="Ouvrir l’exemple de rétroplanning en haute définition">
+                    <img src="{{ url_for('static', filename='img/exemple-retroplanning.webp') }}"
+                         alt="Exemple de rétroplanning d’un salon professionnel : réservation du stand le 1er octobre, validation du BAT le 16 octobre, fabrication le 2 novembre, livraison le 20 novembre et événement le 1er décembre 2026."
+                         width="1440" height="728" fetchpriority="high"
+                         style="display:block;width:100%;height:auto;">
+                </a>
+                <figcaption class="p-6 text-sm text-slate-600">
+                    Exemple produit avec notre générateur. Cliquez pour voir le PNG en grand.
+                    Les dates et les textes sont saisis par vos soins, puis modifiables avant export.
+                    Le fichier téléchargé est une image PNG, sans cellules ni tâches éditables.
+                </figcaption>
+            </figure>
+
+            <nav class="mt-6 flex flex-wrap justify-center gap-4 text-sm text-slate-600" aria-label="En savoir plus">
+                <a href="/blog" class="underline">Blog &amp; guides</a>
+                <a href="/ressources" class="underline">Ressources gratuites</a>
+                <a href="mailto:{{ contact_email_obfuscated }}" class="underline">Nous contacter</a>
+            </nav>
 
         </div>
     </section>
@@ -198,6 +212,7 @@
   <div class="bg-white rounded-xl shadow-md p-6 flex flex-col">
     <h2 class="text-xl font-semibold mb-1 brand-text">À l'acte</h2>
     <p class="text-3xl font-bold text-slate-800 mb-1">2,00€ <span class="text-sm font-normal text-slate-500">HT</span></p>
+    <p class="text-sm text-slate-500 mb-1">Soit 2,40 € TTC</p>
     <p class="text-sm text-slate-500 mb-4">1 rétroplanning, export PNG HD immédiat</p>
     <a href="/modeles"
        class="mt-auto block text-center w-full text-white font-bold py-3 rounded-full shadow transition hover:scale-105 brand-bg">
@@ -210,6 +225,7 @@
     <span class="text-xs font-bold uppercase tracking-wide mb-2 brand-text">Le plus populaire</span>
     <h2 class="text-xl font-semibold mb-1 brand-text">Starter 10</h2>
     <p class="text-3xl font-bold text-slate-800 mb-1">9,90€ <span class="text-sm font-normal text-slate-500">HT / mois</span></p>
+    <p class="text-sm text-slate-500 mb-1">Soit 11,88 € TTC / mois</p>
     <p class="text-sm text-slate-500 mb-4">10 rétroplannings par mois, résiliable à tout moment</p>
     <form action="/checkout/abonnement/starter_10" method="POST" class="mt-auto space-y-3">
       <input type="email" name="email" required placeholder="Votre email"
@@ -225,6 +241,7 @@
   <div class="bg-white rounded-xl shadow-md p-6 flex flex-col">
     <h2 class="text-xl font-semibold mb-1 brand-text">Illimité</h2>
     <p class="text-3xl font-bold text-slate-800 mb-1">19,90€ <span class="text-sm font-normal text-slate-500">HT / mois</span></p>
+    <p class="text-sm text-slate-500 mb-1">Soit 23,88 € TTC / mois</p>
     <p class="text-sm text-slate-500 mb-4">Rétroplannings illimités, résiliable à tout moment</p>
     <form action="/checkout/abonnement/illimite" method="POST" class="mt-auto space-y-3">
       <input type="email" name="email" required placeholder="Votre email"
@@ -532,4 +549,5 @@
 
 </body>
 </html>
+
 

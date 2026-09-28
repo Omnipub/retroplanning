@@ -13,11 +13,11 @@ gtag('config', '{{ ga_id }}');
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rétroplanning événementiel : créez votre planning en ligne</title>
-<meta name="description" content="Créez votre rétroplanning événementiel en ligne : communication, prestataires, production, logistique et validations jusqu'au jour J. Générateur gratuit.">
+<meta name="description" content="Créez votre rétroplanning événementiel en ligne : planifiez vos étapes jusqu'au jour J. Export PNG HD à 2,40 € TTC à l'acte.">
 <link rel="canonical" href="{{ site_url }}/retroplanning-evenementiel">
 <link rel="icon" href="/static/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png"><link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png"><link rel="stylesheet" href="/static/css/tailwind.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-<style>body{font-family:Inter,sans-serif;background:#f8fafc}.ab h2{font-size:1.55rem;font-weight:900;margin:2.3rem 0 .8rem}.ab h3{font-size:1.2rem;font-weight:800;margin:1.6rem 0 .6rem}.ab p{line-height:1.85;margin:1rem 0}.ab li{line-height:1.75;margin:.5rem 0}</style>
+<style>body{font-family:Inter,sans-serif;background:#f8fafc}.ab h2{font-size:1.55rem;font-weight:900;margin:2.3rem 0 .8rem}.ab h3{font-size:1.2rem;font-weight:800;margin:1.6rem 0 .6rem}.ab p{line-height:1.85;margin:1rem 0}.ab li{line-height:1.75;margin:.5rem 0}.event-header{gap:1rem;flex-wrap:wrap}.event-header>a:last-child{max-width:100%;text-align:center}.event-example{margin:2rem 0;background:#fff;border:1px solid #e2e8f0;border-radius:1rem;overflow:hidden}.event-example img{display:block;width:100%;height:auto}.event-example figcaption{padding:1rem;font-size:.875rem;line-height:1.6}.event-actions{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;margin-top:1.5rem}.event-actions a{max-width:100%;text-align:center}@media(max-width:480px){.event-header{justify-content:center}.event-header>a:last-child{width:100%}}</style>
 
 <script type="application/ld+json">
 {
@@ -31,7 +31,7 @@ gtag('config', '{{ ga_id }}');
 </script>
 </head>
 <body class="text-slate-800">
-<header class="bg-white border-b border-slate-200"><div class="max-w-6xl mx-auto px-5 py-5 flex justify-between items-center"><a href="/" class="font-black text-xl">Rétroplanning<span class="text-teal-700">.eu</span></a><a href="/formulaire" class="bg-teal-700 text-white font-bold text-sm px-4 py-2 rounded-full">Créer mon rétroplanning — 2€</a></div></header>
+<header class="bg-white border-b border-slate-200"><div class="max-w-6xl mx-auto px-5 py-5 flex justify-between items-center event-header"><a href="/" class="font-black text-xl">Rétroplanning<span class="text-teal-700">.eu</span></a><a href="{{ url_for('index', modele='salon_professionnel') }}" class="bg-teal-700 text-white font-bold text-sm px-4 py-2 rounded-full">Modèle salon — 2,40 € TTC</a></div></header>
 <main class="max-w-3xl mx-auto px-5 py-10">
 <nav class="text-sm text-slate-500 mb-8"><a href="/">Accueil</a> / Rétroplanning événementiel</nav>
 <article>
@@ -43,6 +43,12 @@ Un rétroplanning événementiel vous permet d'organiser sereinement chaque éta
 salon professionnel, une conférence, un lancement de produit ou une soirée d'entreprise,
 il vous aide à sécuriser vos délais et à répartir les tâches entre les équipes.
 </p>
+
+<div class="event-actions">
+<a href="{{ url_for('index', modele='salon_professionnel') }}" class="bg-teal-700 text-white font-bold px-7 py-3 rounded-full">Utiliser le modèle salon professionnel</a>
+<a href="#exemple-visuel" class="text-teal-700 underline">Voir le résultat</a>
+</div>
+<p class="mt-3 text-sm text-slate-600">2 € HT / 2,40 € TTC à l’acte. Les intitulés sont préremplis ; vous renseignez vos dates et adaptez les étapes à votre événement.</p>
 
 <div class="ab mt-8 text-slate-700">
 
@@ -82,7 +88,7 @@ elle suit généralement les grandes familles d'étapes suivantes :
 
 <h2>Exemple simple de rétroplanning événementiel</h2>
 <p>
-Prenons l'exemple d'un événement professionnel prévu le 15 décembre. Le rétroplanning
+Prenons l'exemple d'un événement professionnel prévu le 15 décembre 2026. Le rétroplanning
 pourrait s'organiser ainsi :
 </p>
 <ul class="list-disc pl-5">
@@ -97,12 +103,29 @@ Chaque étape et chaque date reste bien sûr à adapter à la taille et à la co
 votre propre événement.
 </p>
 
+<figure id="exemple-visuel" class="event-example">
+<a href="{{ url_for('static', filename='img/exemple-evenementiel.png') }}" aria-label="Ouvrir le rétroplanning événementiel en haute définition">
+<img src="{{ url_for('static', filename='img/exemple-evenementiel.webp') }}" width="1440" height="728" loading="lazy" decoding="async" alt="Exemple pour le 15 décembre 2026 : réservation le 16 septembre (J-90), communication le 16 octobre (J-60), production le 15 novembre (J-30), briefing le 8 décembre (J-7), puis événement.">
+</a>
+<figcaption>Exemple fictif produit avec notre générateur, correspondant aux échéances ci-dessus. Cliquez pour ouvrir le PNG en grand. Vous choisissez vos propres dates et couleurs.</figcaption>
+</figure>
+
+<h2>Du modèle au document prêt à partager</h2>
+<ol class="list-decimal pl-5">
+<li>Choisissez un modèle : le modèle salon professionnel fournit des intitulés d’étapes que vous pouvez adapter à votre événement.</li>
+<li>Renseignez la date finale et jusqu’à six étapes clés avec leurs dates. Ajustez vos couleurs et vos coordonnées avant de valider.</li>
+<li>Après paiement ou validation de votre accès abonné, téléchargez votre PNG haute définition pour l’intégrer dans une présentation, un devis ou un document client.</li>
+</ol>
+<p>Le résultat est une frise de synthèse : l’export PNG est une image, sans tâches éditables ni suivi collaboratif. Les textes et les dates se modifient dans le formulaire avant l’export.</p>
+<p>Vous préparez une autre manifestation ? Retrouvez aussi les modèles <a href="{{ url_for('index', modele='association') }}" class="text-teal-700 underline">événement associatif</a> et <a href="{{ url_for('index', modele='lancement_produit') }}" class="text-teal-700 underline">lancement de produit</a>.</p>
 </div>
 
 <section class="mt-10 bg-teal-700 text-white rounded-2xl p-8 text-center">
 <h2 class="text-2xl font-black">Créez votre rétroplanning événementiel en quelques minutes</h2>
-<p class="mt-3 text-teal-50">Indiquez votre événement, sa date et vos principales contraintes. Retroplanning.eu vous aide à structurer les étapes et les échéances de votre projet pour obtenir un rétroplanning clair, prêt à être utilisé et partagé.</p>
-<a href="/modeles" class="inline-block mt-6 bg-white text-teal-800 font-black px-7 py-3 rounded-full">Commencer mon rétroplanning</a>
+<p class="mt-3 text-teal-50">Partez du modèle salon professionnel, adaptez ses étapes et saisissez vos dates. Personnalisez votre frise avant de télécharger votre image PNG haute définition.</p>
+<p class="mt-3 text-teal-50">2 € HT / 2,40 € TTC à l’acte · Abonnements disponibles</p>
+<a href="{{ url_for('index', modele='salon_professionnel') }}" class="inline-block mt-6 bg-white text-teal-800 font-black px-7 py-3 rounded-full">Utiliser le modèle salon professionnel</a>
+<p class="mt-4"><a href="/modeles" class="underline">Voir tous les modèles</a></p>
 </section>
 
 </article>
@@ -110,3 +133,4 @@ votre propre événement.
 <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm"><a href="/" class="hover:text-white">Accueil</a><span class="mx-3">•</span><a href="/blog" class="hover:text-white">Blog</a><span class="mx-3">•</span><a href="/modeles" class="hover:text-white">Modèles</a><span class="mx-3">•</span><a href="/a-propos" class="hover:text-white">À propos</a><p class="mt-3">Un service édité par Omnipub</p></footer>
 </body>
 </html>
+

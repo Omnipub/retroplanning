@@ -13,7 +13,7 @@ gtag('config', '{{ ga_id }}');
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nos offres — Rétroplanning.eu</title>
-<meta name="description" content="Rétroplanning à l'acte dès 2€ HT ou abonnement Starter/Illimité dès 9,90€ HT/mois. Paiement sécurisé Stripe, résiliation en libre-service.">
+<meta name="description" content="Rétroplanning à l'acte à 2,40 € TTC ou abonnement dès 11,88 € TTC/mois. Paiement sécurisé Stripe, résiliation en libre-service.">
 <link rel="canonical" href="{{ site_url }}/tarifs">
 <link rel="icon" href="/static/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png"><link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png"><link rel="stylesheet" href="/static/css/tailwind.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -44,6 +44,7 @@ Choisissez la formule adaptée à votre usage · Paiement sécurisé via Stripe
   <div class="card p-6 flex flex-col">
     <h2 class="text-xl font-semibold mb-1 brand-text">À l'acte</h2>
     <p class="text-3xl font-bold text-slate-800 mb-1">2,00€ <span class="text-sm font-normal text-slate-500">HT</span></p>
+    <p class="text-sm text-slate-500 mb-1">Soit 2,40 € TTC</p>
     <p class="text-sm text-slate-500 mb-4">1 rétroplanning, export PNG HD immédiat</p>
     <a href="/modeles"
        class="mt-auto block text-center w-full text-white font-bold py-3 rounded-full shadow transition hover:scale-105 brand-bg">
@@ -56,6 +57,7 @@ Choisissez la formule adaptée à votre usage · Paiement sécurisé via Stripe
     <span class="text-xs font-bold uppercase tracking-wide mb-2 brand-text">Le plus populaire</span>
     <h2 class="text-xl font-semibold mb-1 brand-text">Starter 10</h2>
     <p class="text-3xl font-bold text-slate-800 mb-1">9,90€ <span class="text-sm font-normal text-slate-500">HT / mois</span></p>
+    <p class="text-sm text-slate-500 mb-1">Soit 11,88 € TTC / mois</p>
     <p class="text-sm text-slate-500 mb-4">10 rétroplannings par mois, résiliable à tout moment</p>
     <form action="/checkout/abonnement/starter_10" method="POST" class="mt-auto space-y-3">
       <input type="email" name="email" required placeholder="Votre email"
@@ -71,6 +73,7 @@ Choisissez la formule adaptée à votre usage · Paiement sécurisé via Stripe
   <div class="card p-6 flex flex-col">
     <h2 class="text-xl font-semibold mb-1 brand-text">Illimité</h2>
     <p class="text-3xl font-bold text-slate-800 mb-1">19,90€ <span class="text-sm font-normal text-slate-500">HT / mois</span></p>
+    <p class="text-sm text-slate-500 mb-1">Soit 23,88 € TTC / mois</p>
     <p class="text-sm text-slate-500 mb-4">Rétroplannings illimités, résiliable à tout moment</p>
     <form action="/checkout/abonnement/illimite" method="POST" class="mt-auto space-y-3">
       <input type="email" name="email" required placeholder="Votre email"
@@ -90,3 +93,4 @@ Choisissez la formule adaptée à votre usage · Paiement sécurisé via Stripe
 </div>
 </body>
 </html>
+
