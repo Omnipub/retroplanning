@@ -48,6 +48,7 @@ def app_module(tmp_path, monkeypatch):
 
     import app as imported_app
 
+    monkeypatch.setattr(imported_app, "ORDERS_FILE", str(tmp_path / "orders.json"))
     imported_app.app.config["TESTING"] = True
     yield imported_app
 
@@ -383,6 +384,36 @@ class TestOrderConfirmationEmail:
         mock_confirm.assert_called_once()
         call_kwargs = mock_confirm.call_args
         assert call_kwargs.kwargs["invoice_url"] is None  # aucun paiement Stripe pour cette generation
+
+
+class TestSubscriberConfirmationQuota:
+    @pytest.mark.parametrize("plan", ["starter_10", "illimite"])
+    def test_refresh_counts_each_order_only_once(self, app_module, client, plan):
+        from urllib.parse import parse_qs, urlparse
+        from models_billing import Customer, UsageRecord
+
+        email = "refresh.quota@example.com"
+        _make_active_subscriber(app_module, email, plan=plan)
+
+        with patch("app.generate_png", return_value="/tmp/test-retroplanning.png"), \
+             patch("app.send_order_confirmation_email") as mock_confirm:
+            for expected_count in (1, 2):
+                response = client.post("/checkout", data=_checkout_payload(email))
+                token = parse_qs(urlparse(response.headers["Location"]).query)["token"][0]
+                # Simule une commande dont la verification email a reussi.
+                order = app_module.get_order(token)
+                order["access_verified"] = True
+                app_module.save_order(token, order)
+
+                for _ in range(3):
+                    result = client.get(f"/success?token={token}&abonne=1")
+                    assert result.status_code == 200
+                    with app_module.app.app_context():
+                        customer = Customer.query.filter_by(email=email).one()
+                        usage = UsageRecord.query.filter_by(customer_id=customer.id).one()
+                        assert usage.count == expected_count
+
+            assert mock_confirm.call_count == 2
 
 
 class TestPaiementSuccesAccountLink:
@@ -834,3 +865,37 @@ class TestSubscriptionCheckoutEmailVerification:
             )
             mock_create.assert_not_called()
         assert "checkout.stripe.com" not in response.headers["Location"]
+
+
+class TestSitemapModificationDates:
+    def test_static_pages_do_not_claim_a_daily_modification(self, client):
+        import xml.etree.ElementTree as ET
+
+        response = client.get('/sitemap.xml')
+        assert response.status_code == 200
+        root = ET.fromstring(response.data)
+        ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        assert len(root.findall('s:url', ns)) == 7
+        assert root.findall('s:url/s:lastmod', ns) == []
+
+    def test_published_article_uses_its_actual_update_date(self, app_module, client):
+        from datetime import datetime
+        import xml.etree.ElementTree as ET
+
+        with app_module.app.app_context():
+            for slug, status in [('article-publie', 'publie'), ('brouillon', 'brouillon')]:
+                article = app_module.Article(
+                    titre='Article test', slug=slug, extrait='Extrait', contenu='Contenu',
+                    statut=status, published_at=datetime(2026, 8, 1),
+                    updated_at=datetime(2026, 8, 15, 10, 30),
+                )
+                app_module.db.session.add(article)
+            app_module.db.session.commit()
+
+        response = client.get('/sitemap.xml')
+        root = ET.fromstring(response.data)
+        ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        entries = {node.find('s:loc', ns).text: node for node in root.findall('s:url', ns)}
+        published = entries[app_module.SITE_URL + '/blog/article-publie']
+        assert published.find('s:lastmod', ns).text == '2026-08-15'
+        assert app_module.SITE_URL + '/blog/brouillon' not in entries

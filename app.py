@@ -12,6 +12,7 @@ import json
 import re
 import unicodedata
 import urllib.parse
+from xml.sax.saxutils import escape
 
 app = Flask(__name__)
 
@@ -132,7 +133,7 @@ HOME_FAQS = [
     },
     {
         "question": "Quelles sont les formules disponibles ?",
-        "answer": "Paiement à l'acte à 2€ HT, abonnement Starter à 9,90€ HT/mois (10 rétroplannings), ou abonnement Illimité à 19,90€ HT/mois. Des modèles préétablis par secteur d'activité sont aussi disponibles pour démarrer plus vite."
+        "answer": "Paiement à l'acte à 2 € HT (2,40 € TTC), abonnement Starter à 9,90 € HT (11,88 € TTC)/mois pour 10 rétroplannings, ou abonnement Illimité à 19,90 € HT (23,88 € TTC)/mois. Des modèles préétablis par secteur d'activité sont aussi disponibles pour démarrer plus vite."
     }
 ]
 
@@ -536,8 +537,9 @@ def success():
     )
     save_order(token, order)
 
-    # --- Stripe billing : decompte le quota mensuel si la generation vient d'un abonnement ---
-    if is_subscriber and order.get("email"):
+    # Une commande deja confirmee ne doit pas consommer un nouveau credit
+    # lorsque l'abonne recharge la page ou revient via son historique.
+    if is_subscriber and order.get("email") and not already_confirmed:
         record_usage(order["email"])
 
     # Email de confirmation avec lien d'acces + instructions (pas seulement la
@@ -811,30 +813,35 @@ def sitemap():
     if _sitemap_cache["content"] and (now - _sitemap_cache["ts"] < SITEMAP_CACHE_TTL):
         return app.response_class(_sitemap_cache["content"], mimetype="application/xml")
 
+    # Pas de date artificielle pour les pages statiques : leur date de
+    # modification ne peut pas etre deduite de la date de consultation.
     urls = [
-        (SITE_URL + "/", "weekly", "1.0"),
-        (SITE_URL + "/retroplanning-evenementiel", "monthly", "0.9"),
-        (SITE_URL + "/modeles", "monthly", "0.8"),
-        (SITE_URL + "/tarifs", "monthly", "0.7"),
-        (SITE_URL + "/blog", "weekly", "0.9"),
-        (SITE_URL + "/ressources", "monthly", "0.6"),
-        (SITE_URL + "/a-propos", "yearly", "0.4"),
+        (SITE_URL + "/", "weekly", "1.0", None),
+        (SITE_URL + "/retroplanning-evenementiel", "monthly", "0.9", None),
+        (SITE_URL + "/modeles", "monthly", "0.8", None),
+        (SITE_URL + "/tarifs", "monthly", "0.7", None),
+        (SITE_URL + "/blog", "weekly", "0.9", None),
+        (SITE_URL + "/ressources", "monthly", "0.6", None),
+        (SITE_URL + "/a-propos", "yearly", "0.4", None),
     ]
 
     try:
         for article in Article.query.filter_by(statut="publie").all():
-            urls.append((SITE_URL + "/blog/" + article.slug, "monthly", "0.8"))
+            modified = article.updated_at or article.published_at
+            urls.append((
+                SITE_URL + "/blog/" + article.slug, "monthly", "0.8",
+                modified.date().isoformat() if modified else None,
+            ))
     except Exception:
         # Base de donnees indisponible ou lente : on sert quand meme les pages statiques
         pass
 
     entries = []
-    today = datetime.utcnow().date().isoformat()
-    for location, frequency, priority in urls:
+    for location, frequency, priority, last_modified in urls:
         entries.append(
             "<url>"
-            + "<loc>" + location + "</loc>"
-            + "<lastmod>" + today + "</lastmod>"
+            + "<loc>" + escape(location) + "</loc>"
+            + ("<lastmod>" + last_modified + "</lastmod>" if last_modified else "")
             + "<changefreq>" + frequency + "</changefreq>"
             + "<priority>" + priority + "</priority>"
             + "</url>"
