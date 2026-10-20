@@ -180,6 +180,29 @@ class Article(db.Model):
         return slugify(self.categorie)
 
     @property
+    def cover_url(self):
+        """Image de l'article servie depuis le domaine.
+
+        Priorite : image_url si elle est hebergee sur retroplanning.eu, sinon la
+        couverture generee static/img/blog/<slug>.png. Les images hebergees sur
+        d'autres domaines sont ignorees : elles cassaient (domaine expire,
+        SharePoint prive) et pointaient hors du site pour les moteurs.
+        """
+        url = (self.image_url or "").strip()
+        if url.startswith("/") and not url.startswith("//"):
+            return url
+        if url.startswith(SITE_URL + "/"):
+            return url[len(SITE_URL):]
+        cover = os.path.join(app.static_folder, "img", "blog", (self.slug or "") + ".png")
+        if self.slug and os.path.exists(cover):
+            return "/static/img/blog/" + self.slug + ".png"
+        return None
+
+    @property
+    def cover_alt(self):
+        return self.image_alt or ("Illustration : " + (self.titre or ""))
+
+    @property
     def reading_minutes(self):
         return max(1, round(len((self.contenu or "").split()) / 220))
 
