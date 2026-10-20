@@ -100,40 +100,44 @@ ORDERS_FILE = "/tmp/orders.json"
 
 HOME_FAQS = [
     {
-        "question": "Comment faire un rétroplanning événementiel efficace ?",
-        "answer": "Un bon rétroplanning part de la date de l'événement et remonte le temps. Définissez les jalons clés afin de visualiser les dates limites."
+        "question": "Qu'est-ce qu'un rétroplanning ?",
+        "answer": "Un rétroplanning est un planning construit à rebours : on part de la date finale (événement, livraison, lancement) et on remonte le temps pour fixer la date limite de chaque étape. Il fait apparaître les jalons critiques, comme la validation d'un BAT ou le lancement de la fabrication, et les marges disponibles avant l'échéance."
     },
     {
-        "question": "Qu'est-ce qu'un rétroplanning ?",
-        "answer": "Un rétroplanning est une méthode de planification qui part de la date finale du projet pour identifier les étapes nécessaires."
+        "question": "Comment faire un rétroplanning événementiel efficace ?",
+        "answer": "Partez de la date de l'événement, listez les livrables indispensables, puis remontez le temps en estimant la durée de chaque étape et une marge de sécurité. Placez en priorité les jalons qui bloquent la suite : réservation du lieu, validation des visuels, fabrication et livraison. Enfin, partagez la frise avec tous les intervenants."
+    },
+    {
+        "question": "Quelle différence entre un rétroplanning et un diagramme de Gantt ?",
+        "answer": "Le diagramme de Gantt détaille toutes les tâches, leurs durées et leurs dépendances pour piloter un projet au quotidien. Le rétroplanning se concentre sur quelques jalons clés calculés à rebours depuis la date finale : il sert à caler les échéances et à les présenter simplement à un client ou à une équipe."
     },
     {
         "question": "À qui s'adresse le générateur de rétroplanning ?",
-        "answer": "Il est conçu pour les agences, organisateurs d'événements, imprimeurs et chefs de projet."
+        "answer": "Il est conçu pour les agences de communication, organisateurs d'événements, imprimeurs et chefs de projet qui doivent présenter un calendrier clair à un client. Il sert aussi aux particuliers et associations pour un mariage, un déménagement, des travaux ou un événement caritatif, grâce à huit modèles pré-remplis."
+    },
+    {
+        "question": "Faut-il créer un compte ?",
+        "answer": "Non pour un rétroplanning à l'acte : vous choisissez un modèle, saisissez vos jalons, payez 2,40 € TTC et téléchargez immédiatement le PNG. Seuls les abonnements Starter 10 et Illimité sont rattachés à votre adresse email, pour gérer l'accès et la résiliation en libre-service."
     },
     {
         "question": "Combien de jalons puis-je ajouter ?",
-        "answer": "Le générateur permet de renseigner jusqu'à six étapes clés avant la date finale."
+        "answer": "Le générateur accepte jusqu'à six étapes clés avant la date finale, soit sept repères sur la frise. C'est volontaire : un rétroplanning lisible en un coup d'œil, à intégrer dans une présentation ou un devis, tient en quelques jalons décisifs plutôt qu'en une longue liste de tâches."
     },
     {
-        "question": "Puis-je modifier les couleurs du graphique ?",
-        "answer": "Oui. Vous choisissez une couleur principale et une couleur secondaire."
-    },
-    {
-        "question": "Puis-je utiliser le rétroplanning pour un autre projet ?",
-        "answer": "Oui. Il convient aussi aux projets de production, impression, lancement et logistique."
+        "question": "Puis-je personnaliser les couleurs et les coordonnées ?",
+        "answer": "Oui. Vous choisissez une couleur principale et une couleur secondaire pour coller à votre charte graphique, et vous renseignez vos propres coordonnées (société, téléphone, email, site) en pied de page. Le rendu est en marque blanche : aucune mention de Rétroplanning.eu n'apparaît sur la frise exportée."
     },
     {
         "question": "Le fichier est-il modifiable après téléchargement ?",
-        "answer": "Le téléchargement est un PNG HD prêt à intégrer dans vos documents. Les données sont modifiables avant export."
+        "answer": "Le téléchargement est une image PNG haute définition, prête à insérer dans PowerPoint, Keynote, un PDF ou un devis. Les cellules ne sont pas éditables après export : vérifiez vos dates et vos textes à l'écran avant de générer, ils restent modifiables jusqu'à cette étape."
     },
     {
         "question": "Vais-je recevoir une facture ?",
-        "answer": "Oui. Stripe génère automatiquement votre facture au moment du paiement ; vous y accédez depuis la page de confirmation ou, pour un abonnement, depuis votre espace client."
+        "answer": "Oui. Stripe génère automatiquement une facture acquittée au moment du paiement. Vous y accédez depuis la page de confirmation et par email ; pour un abonnement, toutes les factures restent disponibles dans votre espace client « Gérer mon abonnement »."
     },
     {
         "question": "Quelles sont les formules disponibles ?",
-        "answer": "Paiement à l'acte à 2 € HT (2,40 € TTC), abonnement Starter à 9,90 € HT (11,88 € TTC)/mois pour 10 rétroplannings, ou abonnement Illimité à 19,90 € HT (23,88 € TTC)/mois. Des modèles préétablis par secteur d'activité sont aussi disponibles pour démarrer plus vite."
+        "answer": "Trois formules : à l'acte à 2 € HT (2,40 € TTC) le rétroplanning, abonnement Starter 10 à 9,90 € HT (11,88 € TTC) par mois pour 10 rétroplannings, et abonnement Illimité à 19,90 € HT (23,88 € TTC) par mois. Les abonnements sont sans engagement et résiliables à tout moment."
     }
 ]
 
@@ -776,7 +780,30 @@ def llms_txt():
         "- [Blog](" + SITE_URL + "/blog) : guides sur la gestion de projet événementiel et de production.",
         "- [Gérer mon abonnement](" + SITE_URL + "/mon-compte) : portail client en libre-service.",
         "- [À propos](" + SITE_URL + "/a-propos) : qui édite Rétroplanning.eu.",
+        "- [Ressources gratuites](" + SITE_URL + "/ressources) : guide complet et modèles à télécharger (PDF, Excel).",
         "",
+    ]
+    try:
+        articles = (
+            Article.query.filter_by(statut="publie")
+            .order_by(Article.published_at.desc())
+            .all()
+        )
+    except Exception:
+        articles = []
+    if articles:
+        lines += ["## Guides du blog", ""]
+        for article in articles:
+            summary = (article.meta_description or article.extrait or "").strip()
+            lines.append(
+                "- [" + article.titre + "](" + SITE_URL + "/blog/" + article.slug + ")"
+                + (" : " + summary if summary else "")
+            )
+        lines.append("")
+    lines += ["## Questions fréquentes", ""]
+    for faq in HOME_FAQS:
+        lines += ["### " + faq["question"], "", faq["answer"], ""]
+    lines += [
         "## Éditeur",
         "",
         "Rétroplanning.eu est édité par Omnipub (" + ENTREPRISE["ville"] + ", France). "
@@ -802,6 +829,40 @@ def robots():
     return app.response_class("\n".join(lines), mimetype="text/plain")
 
 
+STATIC_PAGES_LASTMOD = {
+    "/": "2026-10-20",
+    "/retroplanning-evenementiel": "2026-10-20",
+    "/modeles": "2026-10-20",
+    "/tarifs": "2026-10-20",
+    "/ressources": "2026-10-20",
+    "/a-propos": "2026-10-20",
+}
+
+# IndexNow (Bing, Yandex, Seznam, Naver...) : la cle publique est servie a la
+# racine pour prouver la propriete du domaine. Voir scripts/indexnow_ping.py.
+INDEXNOW_KEY = os.environ.get("INDEXNOW_KEY", "94a2325a2306a8657aa0f9a7fc56d46d")
+
+
+@app.route("/<key>.txt")
+def indexnow_key(key):
+    if key != INDEXNOW_KEY:
+        abort(404)
+    return app.response_class(INDEXNOW_KEY, mimetype="text/plain")
+
+
+# Cache navigateur/CDN des fichiers statiques : les images et PDF changent
+# rarement ; le CSS reste court car son nom n'est pas versionne.
+@app.after_request
+def static_cache_headers(response):
+    path = request.path
+    if path.startswith("/static/") and response.status_code == 200:
+        if path.endswith(".css"):
+            response.headers["Cache-Control"] = "public, max-age=86400"
+        else:
+            response.headers["Cache-Control"] = "public, max-age=604800"
+    return response
+
+
 _sitemap_cache = {"content": None, "ts": 0}
 SITEMAP_CACHE_TTL = 600
 
@@ -813,16 +874,19 @@ def sitemap():
     if _sitemap_cache["content"] and (now - _sitemap_cache["ts"] < SITEMAP_CACHE_TTL):
         return app.response_class(_sitemap_cache["content"], mimetype="application/xml")
 
-    # Pas de date artificielle pour les pages statiques : leur date de
-    # modification ne peut pas etre deduite de la date de consultation.
+    # Dates reelles de derniere modification du contenu des pages statiques :
+    # a mettre a jour a la main dans STATIC_PAGES_LASTMOD lors d'une modif de contenu.
     urls = [
-        (SITE_URL + "/", "weekly", "1.0", None),
-        (SITE_URL + "/retroplanning-evenementiel", "monthly", "0.9", None),
-        (SITE_URL + "/modeles", "monthly", "0.8", None),
-        (SITE_URL + "/tarifs", "monthly", "0.7", None),
-        (SITE_URL + "/blog", "weekly", "0.9", None),
-        (SITE_URL + "/ressources", "monthly", "0.6", None),
-        (SITE_URL + "/a-propos", "yearly", "0.4", None),
+        (SITE_URL + path, freq, prio, STATIC_PAGES_LASTMOD.get(path))
+        for path, freq, prio in (
+            ("/", "weekly", "1.0"),
+            ("/retroplanning-evenementiel", "monthly", "0.9"),
+            ("/modeles", "monthly", "0.8"),
+            ("/tarifs", "monthly", "0.7"),
+            ("/blog", "weekly", "0.9"),
+            ("/ressources", "monthly", "0.6"),
+            ("/a-propos", "yearly", "0.4"),
+        )
     ]
 
     try:

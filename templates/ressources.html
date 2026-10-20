@@ -12,9 +12,10 @@ gtag('config', '{{ ga_id }}');
 {% endif %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ressources Gratuites — Rétroplanning.eu</title>
-    <meta name="description" content="Téléchargez notre guide gratuit Rétroplanning 101 (30 pages) et 3 modèles de rétroplanning pour mariage, lancement produit et conférence. Ressources complètes et prêtes à l'emploi.">
+    <title>Modèles de rétroplanning gratuits (Excel, PDF) | Rétroplanning.eu</title>
+    <meta name="description" content="Téléchargez gratuitement un modèle de rétroplanning Excel qui calcule vos dates limites, le guide Rétroplanning 101 et 3 modèles PDF : mariage, lancement produit, conférence.">
     <link rel="canonical" href="{{ site_url }}/ressources">
+    {% with og_title="Ressources gratuites pour vos rétroplannings", og_description="Guide complet et modèles de rétroplanning gratuits à télécharger (PDF et Excel).", og_url=site_url ~ '/ressources' %}{% include "_social_meta.html" %}{% endwith %}
     <link rel="icon" href="/static/favicon.ico" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
@@ -30,14 +31,20 @@ gtag('config', '{{ ga_id }}');
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "Ressources Gratuites — Rétroplanning.eu",
-      "description": "Guide complet Rétroplanning 101 et modèles de rétroplanning gratuits",
+      "@type": "CollectionPage",
+      "name": "Ressources gratuites pour vos rétroplannings",
+      "description": "Guide complet Rétroplanning 101, modèle de rétroplanning Excel gratuit et modèles PDF à télécharger.",
       "url": "{{ site_url }}/ressources",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Rétroplanning.eu"
-      }
+      "inLanguage": "fr-FR",
+      "isPartOf": {"@id": "{{ site_url }}/#website"},
+      "publisher": {"@id": "{{ site_url }}/#organization"},
+      "hasPart": [
+        {"@type": "DigitalDocument", "name": "Modèle de rétroplanning Excel", "encodingFormat": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "url": "{{ site_url }}/static/Modele-Retroplanning.xlsx", "isAccessibleForFree": true},
+        {"@type": "DigitalDocument", "name": "Rétroplanning 101 : guide complet", "encodingFormat": "application/pdf", "url": "{{ site_url }}/static/Retroplanning-101-Guide-Complet.pdf", "isAccessibleForFree": true},
+        {"@type": "DigitalDocument", "name": "Modèle de rétroplanning mariage", "encodingFormat": "application/pdf", "url": "{{ site_url }}/static/Modele-Mariage.pdf", "isAccessibleForFree": true},
+        {"@type": "DigitalDocument", "name": "Modèle de rétroplanning lancement produit", "encodingFormat": "application/pdf", "url": "{{ site_url }}/static/Modele-Produit.pdf", "isAccessibleForFree": true},
+        {"@type": "DigitalDocument", "name": "Modèle de rétroplanning conférence", "encodingFormat": "application/pdf", "url": "{{ site_url }}/static/Modele-Conference.pdf", "isAccessibleForFree": true}
+      ]
     }
     </script>
 </head>
@@ -80,8 +87,25 @@ gtag('config', '{{ ga_id }}');
     <div class="mt-12">
         <h2 class="text-2xl font-bold text-slate-900 mb-5">🎯 Modèles de Rétroplanning</h2>
         <p class="text-slate-700 mb-6">
-            Trois modèles pré-structurés et prêts à personnaliser pour vos projets.
+            Un modèle Excel qui calcule vos dates limites, et trois modèles PDF pré-structurés.
         </p>
+
+        <!-- Modèle Excel / Google Sheets -->
+        <div class="bg-white border-2 brand-border rounded-2xl p-6 mb-6">
+            <h3 class="text-xl font-bold text-slate-900 mb-3">📊 Modèle de rétroplanning Excel gratuit</h3>
+            <p class="text-slate-700 mb-4">
+                Saisissez la date finale et, pour chaque étape, le nombre de jours avant l'échéance :
+                les dates limites et les jours restants se calculent seuls. Les lignes passent en orange
+                à 7 jours de l'échéance et en rouge si la date est dépassée. Compatible Excel,
+                LibreOffice et Google Sheets (Fichier &gt; Importer).
+            </p>
+            <div class="bg-slate-50 border-l-4 border-slate-300 p-4 mb-4 text-sm text-slate-600">
+                <strong>Exemple inclus :</strong> salon professionnel — réservation du stand J-61 → BAT J-46 → fabrication J-29 → livraison J-11 → jour J.
+            </div>
+            <a href="/static/Modele-Retroplanning.xlsx" download class="inline-block text-white font-bold py-2 px-6 rounded-full shadow transition hover:scale-105 brand-bg">
+                📥 Télécharger le modèle Excel
+            </a>
+        </div>
 
         <!-- Modèle 1: Mariage -->
         <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">

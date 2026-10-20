@@ -6,17 +6,48 @@
 <title>{{ article.meta_title }}</title>  
 <meta name="description" content="{{ article.meta_description }}">  
 <link rel="canonical" href="{{ site_url }}/blog/{{ article.slug }}">
+{% set art_url = site_url ~ '/blog/' ~ article.slug %}
+{% set art_img = article.image_url if (article.image_url and article.image_url.startswith('http')) else ((site_url ~ article.image_url) if article.image_url else (site_url ~ '/static/img/og-retroplanning.png')) %}
+{% with og_title=article.meta_title or article.titre, og_description=article.meta_description, og_url=art_url, og_type='article', og_image=art_img if article.image_url else none, og_image_alt=article.image_alt %}{% include "_social_meta.html" %}{% endwith %}
+{% if article.published_at %}<meta property="article:published_time" content="{{ article.published_at.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}">{% endif %}
+<meta property="article:modified_time" content="{{ article.updated_at.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": {{ article.titre|tojson }},
-  "description": {{ article.meta_description|tojson }},
-  "url": "{{ site_url }}/blog/{{ article.slug }}",
-  {% if article.published_at %}"datePublished": {{ article.published_at.isoformat()|tojson }},{% endif %}
-  "dateModified": {{ article.updated_at.isoformat()|tojson }},
-  "author": { "@type": "Organization", "name": "Omnipub" },
-  "publisher": { "@type": "Organization", "name": "Omnipub" }
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "{{ art_url }}#article",
+      "headline": {{ article.titre|tojson }},
+      "description": {{ article.meta_description|tojson }},
+      "url": "{{ art_url }}",
+      "mainEntityOfPage": {"@type": "WebPage", "@id": "{{ art_url }}"},
+      "image": [{{ art_img|tojson }}],
+      "inLanguage": "fr-FR",
+      "articleSection": {{ article.categorie|tojson }},
+      "wordCount": {{ (article.contenu or '').split()|length }},
+      {% if article.published_at %}"datePublished": "{{ article.published_at.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}",{% endif %}
+      "dateModified": "{{ article.updated_at.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}",
+      "author": {"@type": "Organization", "@id": "{{ site_url }}/#organization", "name": "Rétroplanning.eu", "url": "{{ site_url }}/a-propos"},
+      "publisher": {"@type": "Organization", "@id": "{{ site_url }}/#organization", "name": "Rétroplanning.eu", "logo": {"@type": "ImageObject", "url": "{{ site_url }}/static/img/icon-512.png"}},
+      "isPartOf": {"@id": "{{ site_url }}/#website"}
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Accueil", "item": "{{ site_url }}/"},
+        {"@type": "ListItem", "position": 2, "name": "Blog", "item": "{{ site_url }}/blog"},
+        {"@type": "ListItem", "position": 3, "name": {{ article.categorie|tojson }}, "item": "{{ site_url }}/blog/categorie/{{ article.category_slug }}"},
+        {"@type": "ListItem", "position": 4, "name": {{ article.titre|tojson }}, "item": "{{ art_url }}"}
+      ]
+    }{% if article.faqs %},
+    {
+      "@type": "FAQPage",
+      "mainEntity": [{% for faq in article.faqs %}
+        {"@type": "Question", "name": {{ faq.question|tojson }}, "acceptedAnswer": {"@type": "Answer", "text": {{ faq.answer|tojson }}}}{% if not loop.last %},{% endif %}{% endfor %}
+      ]
+    }{% endif %}
+  ]
 }
 </script>
 <link rel="icon" href="/static/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png"><link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png"><link rel="stylesheet" href="/static/css/tailwind.css">  
@@ -31,8 +62,8 @@
 <p class="font-bold text-teal-700 text-sm">{{ article.categorie }}</p>  
 <h1 class="mt-3 text-4xl font-black">{{ article.titre }}</h1>  
 <p class="mt-5 text-slate-500 text-sm">
-{% if article.published_at %}Publié le {{ article.published_at.strftime('%d/%m/%Y') }}{% endif %}
-{% if article.updated_at and article.published_at and article.updated_at.date() > article.published_at.date() %} · Mis à jour le {{ article.updated_at.strftime('%d/%m/%Y') }}{% endif %}
+{% if article.published_at %}Publié le <time datetime="{{ article.published_at.strftime('%Y-%m-%d') }}">{{ article.published_at.strftime('%d/%m/%Y') }}</time>{% endif %}
+{% if article.updated_at and article.published_at and article.updated_at.date() > article.published_at.date() %} · Mis à jour le <time datetime="{{ article.updated_at.strftime('%Y-%m-%d') }}">{{ article.updated_at.strftime('%d/%m/%Y') }}</time>{% endif %}
  · {{ article.reading_minutes }} min de lecture</p>  
 {% if article.image_url %}<img src="{{ article.image_url }}" alt="{{ article.image_alt }}" class="mt-8 w-full max-h-96 object-cover rounded-2xl">{% endif %}  
 {% if article.resume %}<section class="mt-8 bg-teal-50 border border-teal-100 rounded-2xl p-6"><h2 class="font-black text-xl text-teal-900">En résumé</h2><p class="mt-2 leading-relaxed">{{ article.resume }}</p></section>{% endif %}  

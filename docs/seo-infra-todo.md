@@ -55,3 +55,16 @@ marketing continu, hors dépôt :
   local et les avis).
 - Lier les réseaux sociaux de la marque (LinkedIn, Instagram, Facebook, X, YouTube)
   une fois créés.
+
+## 4. Bing Webmaster Tools + IndexNow (visibilité ChatGPT / Copilot) — octobre 2026
+
+Bing alimente la recherche de ChatGPT et de Copilot. Le site n'apparaissait pas dans son index.
+- Créer le site dans Bing Webmaster Tools (bing.com/webmasters) via « Importer depuis Google Search Console ».
+- Soumettre https://www.retroplanning.eu/sitemap.xml.
+- IndexNow est en place dans le code : la clé est servie à la racine (/<clé>.txt).
+  Après chaque déploiement ou nouvel article : `python scripts/indexnow_ping.py`.
+
+## 5. Contenus à publier via l'admin
+
+Voir docs/articles/ : articles rédigés au format des champs de /admin/blog/nouveau.
+Le brouillon « délais de production » contient des délais marqués [À VALIDER] à corriger avant publication.

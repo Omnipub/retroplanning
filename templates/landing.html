@@ -20,27 +20,14 @@
 
     <meta name="description" content="Créez votre rétroplanning en ligne en quelques minutes : événement, projet ou organisation. Personnalisable à vos couleurs, export PNG HD immédiat.">
 
-    <meta name="keywords" content="rétroplanning, rétroplanning événementiel, rétroplanning de production, planning événementiel, générateur de rétroplanning, agence de communication, outil de planification, chronogramme">
 
     <meta name="robots" content="index, follow">  
     <meta name="author" content="Omnipub">
 
     <link rel="canonical" href="https://www.retroplanning.eu/">
 
-    <!-- Open Graph : partages LinkedIn, Facebook et messageries -->  
-    <meta property="og:site_name" content="Rétroplanning.eu">  
-    <meta property="og:title" content="Créer un rétroplanning de production professionnel">  
-    <meta property="og:description" content="Générez un rétroplanning événementiel personnalisé, prêt à intégrer dans vos présentations et devis clients.">  
-    <meta property="og:type" content="website">  
-    <meta property="og:url" content="https://www.retroplanning.eu/">  
-    <meta property="og:image" content="https://objets-golf.com/Images/Blog_retroplanning/retroplanning-evenementiel-en-equipe-professionnelle.jpg">  
-    <meta property="og:image:alt" content="Rétroplanning événementiel préparé par une équipe professionnelle">
-
-    <!-- Twitter / X -->  
-    <meta name="twitter:card" content="summary_large_image">  
-    <meta name="twitter:title" content="Créer un rétroplanning de production professionnel">  
-    <meta name="twitter:description" content="Générez un rétroplanning événementiel personnalisé en quelques minutes.">  
-    <meta name="twitter:image" content="https://objets-golf.com/Images/Blog_retroplanning/retroplanning-evenementiel-en-equipe-professionnelle.jpg">
+    <!-- Open Graph / X : image hebergee sur le domaine -->
+    {% with og_title="Rétroplanning en ligne : créez une frise prête à partager", og_description="Générez un rétroplanning événementiel ou de production personnalisé à vos couleurs, exporté en PNG HD, prêt pour vos présentations et devis.", og_url=site_url ~ '/' %}{% include "_social_meta.html" %}{% endwith %}
 
     <link rel="icon" href="/static/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png"><link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png"><link rel="stylesheet" href="/static/css/tailwind.css">
 
@@ -49,48 +36,71 @@
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 
-    <!-- Données structurées de l'outil -->  
-    <script type="application/ld+json">  
-    {  
-      "@context": "https://schema.org",  
-      "@type": "WebApplication",  
-      "name": "Rétroplanning.eu",  
-      "url": "https://www.retroplanning.eu",  
-      "description": "Générateur de rétroplanning de production et d'événement en ligne. Export en PNG haute résolution.",  
-      "applicationCategory": "BusinessApplication",  
-      "operatingSystem": "Web",  
-      "offers": {  
-        "@type": "AggregateOffer",  
-        "lowPrice": "2.40",  
-        "highPrice": "23.88",  
-        "priceCurrency": "EUR",  
-        "offerCount": "3"  
-      },  
-      "creator": {
-        "@type": "Organization",
-        "name": "Omnipub"
-      }
-    }
-    </script>
-
-    <!-- Données structurées LocalBusiness : editeur du site -->
+    <!-- Données structurées : marque, site et application (graphe relié par @id) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": {{ entreprise.nom|tojson }},
-      "url": "{{ site_url }}/a-propos",
-      "email": {{ contact_email|tojson }},
-      "telephone": {{ entreprise.telephone|tojson }},
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": {{ entreprise.adresse|tojson }},
-        "postalCode": {{ entreprise.cp|tojson }},
-        "addressLocality": {{ entreprise.ville|tojson }},
-        "addressRegion": {{ entreprise.region|tojson }},
-        "addressCountry": {{ entreprise.pays|tojson }}
-      }
-      {% if social_links_sameas %},"sameAs": {{ social_links_sameas|tojson }}{% endif %}
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "{{ site_url }}/#organization",
+          "name": "Rétroplanning.eu",
+          "url": "{{ site_url }}/",
+          "logo": {"@type": "ImageObject", "url": "{{ site_url }}/static/img/icon-512.png", "width": 512, "height": 512},
+          "description": "Générateur en ligne de rétroplannings événementiels et de production, exportés en PNG haute définition aux couleurs de l'utilisateur.",
+          "email": {{ contact_email|tojson }},
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "telephone": {{ contact_phone_tel|tojson }},
+            "email": {{ contact_email|tojson }},
+            "availableLanguage": "French",
+            "hoursAvailable": {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"], "opens": "00:00", "closes": "23:59"}
+          },
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": {{ entreprise.nom|tojson }},
+            "telephone": {{ entreprise.telephone|tojson }},
+            "identifier": {"@type": "PropertyValue", "propertyID": "SIRET", "value": {{ entreprise.siret|replace(' ', '')|tojson }}},
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": {{ entreprise.adresse|tojson }},
+              "postalCode": {{ entreprise.cp|tojson }},
+              "addressLocality": {{ entreprise.ville|tojson }},
+              "addressRegion": {{ entreprise.region|tojson }},
+              "addressCountry": {{ entreprise.pays|tojson }}
+            }
+          }
+          {% if social_links_sameas %},"sameAs": {{ social_links_sameas|tojson }}{% endif %}
+        },
+        {
+          "@type": "WebSite",
+          "@id": "{{ site_url }}/#website",
+          "name": "Rétroplanning.eu",
+          "url": "{{ site_url }}/",
+          "inLanguage": "fr-FR",
+          "publisher": {"@id": "{{ site_url }}/#organization"}
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "{{ site_url }}/#app",
+          "name": "Rétroplanning.eu",
+          "url": "{{ site_url }}/",
+          "description": "Générateur de rétroplanning en ligne : saisissez jusqu'à six jalons et une date finale, personnalisez les couleurs et le pied de page, puis exportez une frise chronologique en PNG haute définition. Sans logiciel à installer, avec des modèles par type de projet.",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web",
+          "inLanguage": "fr-FR",
+          "image": "{{ site_url }}/static/img/og-retroplanning.png",
+          "publisher": {"@id": "{{ site_url }}/#organization"},
+          "offers": [
+            {"@type": "Offer", "name": "À l'acte", "description": "1 rétroplanning, export PNG HD immédiat", "price": "2.40", "priceCurrency": "EUR", "url": "{{ site_url }}/tarifs", "availability": "https://schema.org/InStock"},
+            {"@type": "Offer", "name": "Starter 10", "description": "10 rétroplannings par mois, résiliable à tout moment", "price": "11.88", "priceCurrency": "EUR", "url": "{{ site_url }}/tarifs", "availability": "https://schema.org/InStock",
+             "priceSpecification": {"@type": "UnitPriceSpecification", "price": "11.88", "priceCurrency": "EUR", "unitCode": "MON", "valueAddedTaxIncluded": true}},
+            {"@type": "Offer", "name": "Illimité", "description": "Rétroplannings illimités, résiliable à tout moment", "price": "23.88", "priceCurrency": "EUR", "url": "{{ site_url }}/tarifs", "availability": "https://schema.org/InStock",
+             "priceSpecification": {"@type": "UnitPriceSpecification", "price": "23.88", "priceCurrency": "EUR", "unitCode": "MON", "valueAddedTaxIncluded": true}}
+          ]
+        }
+      ]
     }
     </script>
 
