@@ -7,8 +7,8 @@
 <meta name="description" content="{{ article.meta_description }}">  
 <link rel="canonical" href="{{ site_url }}/blog/{{ article.slug }}">
 {% set art_url = site_url ~ '/blog/' ~ article.slug %}
-{% set art_img = article.image_url if (article.image_url and article.image_url.startswith('http')) else ((site_url ~ article.image_url) if article.image_url else (site_url ~ '/static/img/og-retroplanning.png')) %}
-{% with og_title=article.meta_title or article.titre, og_description=article.meta_description, og_url=art_url, og_type='article', og_image=art_img if article.image_url else none, og_image_alt=article.image_alt %}{% include "_social_meta.html" %}{% endwith %}
+{% set art_img = (site_url ~ article.cover_url) if article.cover_url else (site_url ~ '/static/img/og-retroplanning.png') %}
+{% with og_title=article.meta_title or article.titre, og_description=article.meta_description, og_url=art_url, og_type='article', og_image=art_img if article.cover_url else none, og_image_alt=article.cover_alt %}{% include "_social_meta.html" %}{% endwith %}
 {% if article.published_at %}<meta property="article:published_time" content="{{ article.published_at.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}">{% endif %}
 <meta property="article:modified_time" content="{{ article.updated_at.strftime('%Y-%m-%dT%H:%M:%S+00:00') }}">
 <script type="application/ld+json">
@@ -65,7 +65,7 @@
 {% if article.published_at %}Publié le <time datetime="{{ article.published_at.strftime('%Y-%m-%d') }}">{{ article.published_at.strftime('%d/%m/%Y') }}</time>{% endif %}
 {% if article.updated_at and article.published_at and article.updated_at.date() > article.published_at.date() %} · Mis à jour le <time datetime="{{ article.updated_at.strftime('%Y-%m-%d') }}">{{ article.updated_at.strftime('%d/%m/%Y') }}</time>{% endif %}
  · {{ article.reading_minutes }} min de lecture</p>  
-{% if article.image_url %}<img src="{{ article.image_url }}" alt="{{ article.image_alt }}" class="mt-8 w-full max-h-96 object-cover rounded-2xl">{% endif %}  
+{% if article.cover_url %}<img src="{{ article.cover_url }}" alt="{{ article.cover_alt }}" width="1200" height="630" class="mt-8 w-full max-h-96 object-cover rounded-2xl">{% endif %}  
 {% if article.resume %}<section class="mt-8 bg-teal-50 border border-teal-100 rounded-2xl p-6"><h2 class="font-black text-xl text-teal-900">En résumé</h2><p class="mt-2 leading-relaxed">{{ article.resume }}</p></section>{% endif %}  
 <div class="ab mt-8 text-slate-700">{% for kind,text in article.contenu|content_blocks %}{% if kind=='h2' %}<h2>{{ text }}</h2>{% elif kind=='h3' %}<h3>{{ text }}</h3>{% elif kind=='li' %}<li>{{ text }}</li>{% else %}<p>{{ text }}</p>{% endif %}{% endfor %}</div>  
 {% if article.points_cles %}<section class="mt-10 bg-white border rounded-2xl p-6"><h2 class="font-black text-xl">À retenir</h2><ul class="list-disc pl-5 mt-3 space-y-2">{% for item in article.points_cles.splitlines() if item.strip() %}<li>{{ item }}</li>{% endfor %}</ul></section>{% endif %}  

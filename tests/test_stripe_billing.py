@@ -906,3 +906,17 @@ class TestSitemapModificationDates:
         published = entries[app_module.SITE_URL + '/blog/article-publie']
         assert published.find('s:lastmod', ns).text == '2026-08-15'
         assert app_module.SITE_URL + '/blog/brouillon' not in entries
+
+
+class TestArticleCover:
+    def test_external_image_ignored_and_local_cover_used(self, app_module):
+        with app_module.app.app_context():
+            a = app_module.Article(titre='T', slug='retroplanning-agence-de-communication', extrait='e', contenu='c',
+                                   image_url='https://objets-golf.com/Images/x.jpg')
+            assert a.cover_url == '/static/img/blog/retroplanning-agence-de-communication.png'
+            b = app_module.Article(titre='T', slug='slug-sans-couverture', extrait='e', contenu='c',
+                                   image_url='https://exemple.com/x.jpg')
+            assert b.cover_url is None
+            c = app_module.Article(titre='T', slug='slug-sans-couverture', extrait='e', contenu='c',
+                                   image_url='/static/img/og-retroplanning.png')
+            assert c.cover_url == '/static/img/og-retroplanning.png'
