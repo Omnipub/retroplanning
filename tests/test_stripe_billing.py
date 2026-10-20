@@ -876,7 +876,14 @@ class TestSitemapModificationDates:
         root = ET.fromstring(response.data)
         ns = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
         assert len(root.findall('s:url', ns)) == 7
-        assert root.findall('s:url/s:lastmod', ns) == []
+        # Les pages statiques n'affichent que des dates fixes, renseignees a la
+        # main dans STATIC_PAGES_LASTMOD -- jamais la date du jour de consultation.
+        from app import SITE_URL, STATIC_PAGES_LASTMOD
+        for node in root.findall('s:url', ns):
+            path = node.find('s:loc', ns).text[len(SITE_URL):]
+            lastmod = node.find('s:lastmod', ns)
+            expected = STATIC_PAGES_LASTMOD.get(path)
+            assert (lastmod.text if lastmod is not None else None) == expected
 
     def test_published_article_uses_its_actual_update_date(self, app_module, client):
         from datetime import datetime

@@ -12,15 +12,17 @@ gtag('config', '{{ ga_id }}');
 {% endif %}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nos offres — Rétroplanning.eu</title>
+<title>Tarifs rétroplanning en ligne : à l'acte ou abonnement | Rétroplanning.eu</title>
 <meta name="description" content="Rétroplanning à l'acte à 2,40 € TTC ou abonnement dès 11,88 € TTC/mois. Paiement sécurisé Stripe, résiliation en libre-service.">
 <link rel="canonical" href="{{ site_url }}/tarifs">
+{% with og_title="Tarifs Rétroplanning.eu : à l'acte ou abonnement", og_description="2,40 € TTC le rétroplanning, ou abonnement Starter 10 (11,88 € TTC/mois) et Illimité (23,88 € TTC/mois), sans engagement.", og_url=site_url ~ '/tarifs' %}{% include "_social_meta.html" %}{% endwith %}
 <link rel="icon" href="/static/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png"><link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png"><link rel="stylesheet" href="/static/css/tailwind.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
 .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Quelle formule choisir selon mon volume ?", "acceptedAnswer": {"@type": "Answer", "text": "À partir de 5 rétroplannings par mois, l'abonnement Starter 10 (11,88 € TTC) revient moins cher que 5 achats à l'acte (12,00 € TTC), soit environ 1,19 € TTC le rétroplanning. Au-delà de 10 par mois, l'abonnement Illimité (23,88 € TTC) devient la formule la plus économique."}}, {"@type": "Question", "name": "Faut-il créer un compte pour un rétroplanning à l'acte ?", "acceptedAnswer": {"@type": "Answer", "text": "Non. Pour un achat à l'acte, vous choisissez un modèle, saisissez vos jalons, payez 2,40 € TTC par carte via Stripe et téléchargez immédiatement votre PNG haute définition. Un email suffit pour recevoir la facture et le lien d'accès."}}, {"@type": "Question", "name": "Puis-je résilier mon abonnement à tout moment ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui. Les abonnements Starter 10 et Illimité sont sans engagement : vous les résiliez vous-même depuis la page « Gérer mon abonnement », et l'accès reste actif jusqu'à la fin de la période déjà payée."}}, {"@type": "Question", "name": "Les prix incluent-ils la TVA ?", "acceptedAnswer": {"@type": "Answer", "text": "Les prix sont affichés hors taxes et toutes taxes comprises : 2,00 € HT (2,40 € TTC) à l'acte, 9,90 € HT (11,88 € TTC) par mois pour Starter 10 et 19,90 € HT (23,88 € TTC) par mois pour Illimité. Une facture acquittée est générée automatiquement à chaque paiement."}}]}</script>
 </head>
 <body class="p-4 md:p-8">
 <div class="max-w-5xl mx-auto">
@@ -87,6 +89,16 @@ Choisissez la formule adaptée à votre usage · Paiement sécurisé via Stripe
 
 </div>
 
+
+<section class="max-w-3xl mx-auto mt-12">
+<h2 class="text-2xl font-black text-slate-800 mb-4">Questions fréquentes sur les tarifs</h2>
+<div class="space-y-4">
+<div class="card p-6"><h3 class="font-bold text-slate-800">Quelle formule choisir selon mon volume ?</h3><p class="mt-2 text-slate-600 leading-relaxed">À partir de 5 rétroplannings par mois, l'abonnement Starter 10 (11,88 € TTC) revient moins cher que 5 achats à l'acte (12,00 € TTC), soit environ 1,19 € TTC le rétroplanning. Au-delà de 10 par mois, l'abonnement Illimité (23,88 € TTC) devient la formule la plus économique.</p></div>
+<div class="card p-6"><h3 class="font-bold text-slate-800">Faut-il créer un compte pour un rétroplanning à l'acte ?</h3><p class="mt-2 text-slate-600 leading-relaxed">Non. Pour un achat à l'acte, vous choisissez un modèle, saisissez vos jalons, payez 2,40 € TTC par carte via Stripe et téléchargez immédiatement votre PNG haute définition. Un email suffit pour recevoir la facture et le lien d'accès.</p></div>
+<div class="card p-6"><h3 class="font-bold text-slate-800">Puis-je résilier mon abonnement à tout moment ?</h3><p class="mt-2 text-slate-600 leading-relaxed">Oui. Les abonnements Starter 10 et Illimité sont sans engagement : vous les résiliez vous-même depuis la page « Gérer mon abonnement », et l'accès reste actif jusqu'à la fin de la période déjà payée.</p></div>
+<div class="card p-6"><h3 class="font-bold text-slate-800">Les prix incluent-ils la TVA ?</h3><p class="mt-2 text-slate-600 leading-relaxed">Les prix sont affichés hors taxes et toutes taxes comprises : 2,00 € HT (2,40 € TTC) à l'acte, 9,90 € HT (11,88 € TTC) par mois pour Starter 10 et 19,90 € HT (23,88 € TTC) par mois pour Illimité. Une facture acquittée est générée automatiquement à chaque paiement.</p></div>
+</div>
+</section>
 <p class="text-center text-slate-400 text-xs mt-8">
 <svg class="icon-inline" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Paiement sécurisé par Stripe · Facture automatique · Résiliation en 1 clic depuis <a href="/mon-compte" class="underline hover:text-slate-600">votre espace client</a>
 </p>

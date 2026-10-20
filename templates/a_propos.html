@@ -26,24 +26,41 @@ gtag('config', '{{ ga_id }}');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
     </style>
 
-    <!-- Donnees structurees LocalBusiness : editeur du site -->
+    {% with og_title="À propos de Rétroplanning.eu", og_description="Qui édite Rétroplanning.eu, le générateur de rétroplannings en ligne : coordonnées, assistance et engagement.", og_url=site_url ~ '/a-propos' %}{% include "_social_meta.html" %}{% endwith %}
+
+    <!-- Donnees structurees : page A propos rattachee a l'entite de marque -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": {{ entreprise.nom|tojson }},
+      "@type": "AboutPage",
       "url": "{{ site_url }}/a-propos",
-      "email": {{ contact_email|tojson }},
-      "telephone": {{ entreprise.telephone|tojson }},
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": {{ entreprise.adresse|tojson }},
-        "postalCode": {{ entreprise.cp|tojson }},
-        "addressLocality": {{ entreprise.ville|tojson }},
-        "addressRegion": {{ entreprise.region|tojson }},
-        "addressCountry": {{ entreprise.pays|tojson }}
+      "name": "À propos de Rétroplanning.eu",
+      "inLanguage": "fr-FR",
+      "isPartOf": {"@id": "{{ site_url }}/#website"},
+      "about": {
+        "@type": "Organization",
+        "@id": "{{ site_url }}/#organization",
+        "name": "Rétroplanning.eu",
+        "url": "{{ site_url }}/",
+        "logo": "{{ site_url }}/static/img/icon-512.png",
+        "contactPoint": {"@type": "ContactPoint", "contactType": "customer service", "telephone": {{ contact_phone_tel|tojson }}, "email": {{ contact_email|tojson }}, "availableLanguage": "French"},
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": {{ entreprise.nom|tojson }},
+          "foundingDate": "1999",
+          "telephone": {{ entreprise.telephone|tojson }},
+          "identifier": {"@type": "PropertyValue", "propertyID": "SIRET", "value": {{ entreprise.siret|replace(' ', '')|tojson }}},
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": {{ entreprise.adresse|tojson }},
+            "postalCode": {{ entreprise.cp|tojson }},
+            "addressLocality": {{ entreprise.ville|tojson }},
+            "addressRegion": {{ entreprise.region|tojson }},
+            "addressCountry": {{ entreprise.pays|tojson }}
+          }
+        }
+        {% if social_links_sameas %},"sameAs": {{ social_links_sameas|tojson }}{% endif %}
       }
-      {% if social_links_sameas %},"sameAs": {{ social_links_sameas|tojson }}{% endif %}
     }
     </script>
 </head>
@@ -74,6 +91,20 @@ gtag('config', '{{ ga_id }}');
             du mariage au lancement de produit.
         </p>
         <p>
+            Rétroplanning.eu est né d'un besoin de terrain : depuis 1999, son éditeur organise la
+            production de supports et d'opérations pour des clients de tous secteurs, avec des
+            dates butoirs qui ne se négocient pas (salons, lancements, événements). Le rétroplanning
+            y est l'outil quotidien pour caler les validations, la fabrication et la livraison ;
+            l'outil en reprend la méthode, en version prête à partager.
+        </p>
+        <h2 class="text-2xl font-black text-slate-900 pt-4">Nos engagements</h2>
+        <ul class="list-disc pl-6 space-y-2">
+            <li>Aucun compte obligatoire pour un rétroplanning à l'acte.</li>
+            <li>Un rendu en marque blanche : vos couleurs et vos coordonnées, pas les nôtres.</li>
+            <li>Une facture générée automatiquement à chaque paiement.</li>
+            <li>Des abonnements sans engagement, résiliables en libre-service.</li>
+        </ul>
+        <p>
             Le site propose un paiement à l'usage (2,40€ TTC le rétroplanning) ou des
             abonnements pour un usage régulier, avec paiement sécurisé via Stripe.
         </p>
@@ -85,7 +116,8 @@ gtag('config', '{{ ga_id }}');
         <p class="text-slate-600">{{ entreprise.adresse }}</p>
         <p class="text-slate-600">{{ entreprise.cp }} {{ entreprise.ville }}</p>
         <p class="text-slate-600 mt-2">SIRET : {{ entreprise.siret }}</p>
-        <p class="text-slate-600">Téléphone : {{ entreprise.telephone_affichage }}</p>
+        <p class="text-slate-600">Assistance (24h/24, 7j/7) : <a href="tel:{{ contact_phone_tel }}" class="underline">{{ contact_phone_display }}</a></p>
+        <p class="text-slate-600">Siège : {{ entreprise.telephone_affichage }}</p>
         <p class="text-slate-600">
             Email :
             <a href="mailto:{{ contact_email_obfuscated }}" class="underline">{{ contact_email_obfuscated }}</a>
