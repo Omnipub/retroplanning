@@ -920,3 +920,41 @@ class TestArticleCover:
             c = app_module.Article(titre='T', slug='slug-sans-couverture', extrait='e', contenu='c',
                                    image_url='/static/img/og-retroplanning.png')
             assert c.cover_url == '/static/img/og-retroplanning.png'
+
+
+class TestLinkedInPost:
+    def _article(self, app_module, statut='publie'):
+        from datetime import datetime
+        a = app_module.Article(
+            titre='Rétroplanning de mariage', slug='retroplanning-mariage-guide-complet', categorie='Mariage',
+            extrait='Extrait', contenu='Contenu', resume='Première phrase. Deuxième phrase.',
+            points_cles='Point un\nPoint deux', statut=statut, published_at=datetime(2026, 8, 31),
+        )
+        app_module.db.session.add(a)
+        app_module.db.session.commit()
+        return a.id
+
+    def test_post_text_contains_title_link_points_and_hashtags(self, app_module):
+        with app_module.app.app_context():
+            a = app_module.Article.query.get(self._article(app_module))
+            text = app_module.build_linkedin_post(a)
+        assert text.startswith('Rétroplanning de mariage')
+        assert '→ Point un' in text and '→ Point deux' in text
+        assert app_module.SITE_URL + '/blog/retroplanning-mariage-guide-complet?utm_source=linkedin' in text
+        assert '#Mariage' in text
+        assert len(text) <= app_module.LINKEDIN_POST_MAX
+
+    def test_page_requires_admin_and_published_article(self, app_module, client):
+        with app_module.app.app_context():
+            pub = self._article(app_module)
+        assert client.get(f'/admin/blog/{pub}/linkedin').status_code == 302
+        with client.session_transaction() as s:
+            s['admin'] = True
+        r = client.get(f'/admin/blog/{pub}/linkedin')
+        assert r.status_code == 200
+        assert 'Copier le texte' in r.get_data(as_text=True)
+        with app_module.app.app_context():
+            a = app_module.Article.query.get(pub)
+            a.statut = 'brouillon'
+            app_module.db.session.commit()
+        assert client.get(f'/admin/blog/{pub}/linkedin').status_code == 302

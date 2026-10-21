@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Post LinkedIn | Admin</title><link rel="icon" href="/static/favicon.ico" sizes="any"><link rel="stylesheet" href="/static/css/tailwind.css"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"><style>body{font-family:Inter,sans-serif;background:#f8fafc}</style></head>
+<body class="p-5 md:p-10 text-slate-800">
+<main class="max-w-5xl mx-auto">
+  <header class="mb-8">
+    <a href="/admin/blog" class="font-bold text-sm text-teal-700">← Articles</a>
+    <h1 class="mt-2 text-3xl font-black">Post LinkedIn</h1>
+    <p class="text-slate-600">{{ article.titre }}</p>
+  </header>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <section class="md:col-span-2 bg-white border border-slate-200 rounded-2xl p-6">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="font-black text-xl">1. Texte du post</h2>
+        <span id="count" class="text-sm text-slate-500"></span>
+      </div>
+      <p class="text-sm text-slate-500 mb-3">Modifiable avant de copier. Le lien contient un suivi « linkedin » visible dans Google Analytics.</p>
+      <textarea id="post" rows="18" maxlength="{{ post_max }}" class="w-full border rounded-lg p-3 text-sm leading-relaxed">{{ post_text }}</textarea>
+      <button id="copy" type="button" class="mt-4 bg-teal-700 text-white font-bold px-5 py-3 rounded-full">Copier le texte</button>
+      <span id="copied" class="ml-3 text-sm font-bold text-teal-700" hidden>Copié ✓</span>
+    </section>
+
+    <aside class="space-y-6">
+      <section class="bg-white border border-slate-200 rounded-2xl p-6">
+        <h2 class="font-black text-xl mb-3">2. Image</h2>
+        {% if article.cover_url %}
+        <img src="{{ article.cover_url }}" alt="{{ article.cover_alt }}" width="1200" height="630" class="w-full rounded-xl border">
+        <a href="{{ article.cover_url }}" download="{{ article.slug }}.png" class="inline-block mt-4 font-bold text-teal-700">Télécharger l'image</a>
+        {% else %}
+        <p class="text-sm text-slate-500">Pas d'image pour cet article : LinkedIn affichera l'aperçu du lien.</p>
+        {% endif %}
+      </section>
+
+      <section class="bg-white border border-slate-200 rounded-2xl p-6">
+        <h2 class="font-black text-xl mb-3">3. Publier</h2>
+        <a href="{{ linkedin_admin_url }}" target="_blank" rel="noopener" class="block text-center bg-sky-700 text-white font-bold px-5 py-3 rounded-full">Ouvrir ma page LinkedIn</a>
+        <ol class="mt-4 text-sm text-slate-600 space-y-2 list-decimal pl-5">
+          <li>Cliquez sur « Commencer un post » depuis la page Retroplanning.</li>
+          <li>Collez le texte (Ctrl+V ou Cmd+V).</li>
+          <li>Ajoutez l'image téléchargée, puis publiez.</li>
+        </ol>
+      </section>
+    </aside>
+  </div>
+</main>
+<script>
+  var post = document.getElementById('post');
+  var count = document.getElementById('count');
+  function updateCount() { count.textContent = post.value.length + ' / {{ post_max }} caractères'; }
+  post.addEventListener('input', updateCount);
+  updateCount();
+  document.getElementById('copy').addEventListener('click', function () {
+    var done = function () {
+      var msg = document.getElementById('copied');
+      msg.hidden = false;
+      setTimeout(function () { msg.hidden = true; }, 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(post.value).then(done, function () { post.select(); document.execCommand('copy'); done(); });
+    } else {
+      post.select(); document.execCommand('copy'); done();
+    }
+  });
+</script>
+</body></html>
