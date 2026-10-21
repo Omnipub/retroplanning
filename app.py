@@ -705,6 +705,58 @@ def save_article_from_form(article):
         article.published_at = None
 
 
+LINKEDIN_HASHTAGS = {
+    "mariage": ["#Mariage", "#OrganisationMariage"],
+    "production": ["#Production", "#ObjetsPublicitaires"],
+    "agences": ["#AgenceDeCommunication", "#Communication"],
+    "evenementiel": ["#Evenementiel", "#Evenement"],
+}
+LINKEDIN_POST_MAX = 3000
+
+
+def _first_sentences(text, max_chars):
+    """Coupe un texte apres la derniere phrase complete tenant dans max_chars."""
+    text = " ".join((text or "").split())
+    if len(text) <= max_chars:
+        return text
+    cut = text[:max_chars]
+    end = max(cut.rfind(". "), cut.rfind(" ? "), cut.rfind(" ! "))
+    return cut[: end + 1] if end > 0 else cut.rsplit(" ", 1)[0] + "…"
+
+
+def build_linkedin_post(article):
+    """Texte de post LinkedIn genere a partir d'un article publie."""
+    url = (SITE_URL + "/blog/" + article.slug
+           + "?utm_source=linkedin&utm_medium=social&utm_campaign=blog")
+    intro = _first_sentences(article.resume or article.extrait, 520)
+    points = [p.strip() for p in (article.points_cles or "").splitlines() if p.strip()][:4]
+    hashtags = ["#Rétroplanning", "#GestionDeProjet"]
+    hashtags += LINKEDIN_HASHTAGS.get(article.category_slug, [])
+
+    parts = [article.titre, "", intro]
+    if points:
+        parts += ["", "À retenir :"] + ["→ " + p for p in points]
+    parts += ["", "👉 Le guide complet : " + url, "", " ".join(hashtags)]
+    return "\n".join(parts)[:LINKEDIN_POST_MAX]
+
+
+@app.route("/admin/blog/<int:article_id>/linkedin")
+def admin_blog_linkedin(article_id):
+    if not is_admin():
+        return redirect(url_for("admin_login"))
+    article = Article.query.get_or_404(article_id)
+    if article.statut != "publie":
+        return redirect(url_for("admin_blog"))
+    linkedin_page = (SOCIAL_LINKS.get("linkedin") or "").rstrip("/")
+    return render_template(
+        "admin_linkedin.html",
+        article=article,
+        post_text=build_linkedin_post(article),
+        post_max=LINKEDIN_POST_MAX,
+        linkedin_admin_url=(linkedin_page + "/admin/page-posts/published/") if linkedin_page else "https://www.linkedin.com/",
+    )
+
+
 @app.route("/admin/blog/nouveau", methods=["GET", "POST"])
 def admin_blog_new():
     if not is_admin():
