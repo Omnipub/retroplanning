@@ -958,3 +958,35 @@ class TestLinkedInPost:
             a.statut = 'brouillon'
             app_module.db.session.commit()
         assert client.get(f'/admin/blog/{pub}/linkedin').status_code == 302
+
+
+class TestScheduledArticles:
+    def test_future_article_hidden_until_date(self, app_module, client):
+        from datetime import datetime, timedelta
+        with app_module.app.app_context():
+            futur = app_module.Article(titre='Article futur', slug='article-futur', categorie='Guides',
+                                       extrait='e', contenu='c', statut='publie',
+                                       published_at=datetime.utcnow() + timedelta(days=2))
+            passe = app_module.Article(titre='Article passe', slug='article-passe', categorie='Guides',
+                                       extrait='e', contenu='c', statut='publie',
+                                       published_at=datetime.utcnow() - timedelta(days=1))
+            app_module.db.session.add_all([futur, passe])
+            app_module.db.session.commit()
+            assert futur.is_scheduled and not passe.is_scheduled
+            fid = futur.id
+        assert client.get('/blog/article-futur').status_code == 404
+        assert client.get('/blog/article-passe').status_code == 200
+        blog = client.get('/blog').get_data(as_text=True)
+        assert 'Article passe' in blog and 'Article futur' not in blog
+        assert '/blog/article-futur' not in client.get('/llms.txt').get_data(as_text=True)
+        with app_module.app.app_context():
+            a = app_module.db.session.get(app_module.Article, fid)
+            a.published_at = datetime.utcnow() - timedelta(minutes=1)
+            app_module.db.session.commit()
+        assert client.get('/blog/article-futur').status_code == 200
+
+    def test_paris_datetime_parsing(self, app_module):
+        dt = app_module.parse_paris_datetime('2026-11-17T07:00')
+        assert (dt.hour, dt.minute) == (6, 0)  # Paris = UTC+1 en novembre
+        assert app_module.parse_paris_datetime('') is None
+        assert app_module.parse_paris_datetime('n importe quoi') is None
