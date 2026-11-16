@@ -4,11 +4,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
 import os
 import uuid
 import json
+from zoneinfo import ZoneInfo
 import re
 import unicodedata
 import urllib.parse
@@ -201,6 +202,17 @@ class Article(db.Model):
     @property
     def cover_alt(self):
         return self.image_alt or ("Illustration : " + (self.titre or ""))
+
+    @property
+    def is_scheduled(self):
+        return bool(self.statut == "publie" and self.published_at and self.published_at > datetime.utcnow())
+
+    @property
+    def published_at_local(self):
+        """Date de publication en heure de Paris, pour l'admin."""
+        if not self.published_at:
+            return None
+        return self.published_at.replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Europe/Paris"))
 
     @property
     def reading_minutes(self):
@@ -597,16 +609,44 @@ def cancel():
     return render_template("cancel.html", contact_email=CONTACT_EMAIL)
 
 
+PARIS_TZ = ZoneInfo("Europe/Paris")
+
+
+def published_articles():
+    """Articles visibles publiquement : publies et dont la date de publication est passee.
+
+    Un article « publie » avec une date future est programme : il reste invisible
+    (blog, sitemap, llms.txt, page article) jusqu'a cette date.
+    """
+    return Article.query.filter(
+        Article.statut == "publie",
+        Article.published_at.isnot(None),
+        Article.published_at <= datetime.utcnow(),
+    )
+
+
+def parse_paris_datetime(value):
+    """Convertit une saisie datetime-local (heure de Paris) en datetime UTC naif."""
+    value = (value or "").strip()
+    if not value:
+        return None
+    try:
+        local = datetime.strptime(value[:16], "%Y-%m-%dT%H:%M").replace(tzinfo=PARIS_TZ)
+    except ValueError:
+        return None
+    return local.astimezone(timezone.utc).replace(tzinfo=None)
+
+
 @app.route("/blog")
 def blog_index():
-    articles = Article.query.filter_by(statut="publie").order_by(Article.published_at.desc()).all()
+    articles = published_articles().order_by(Article.published_at.desc()).all()
     return render_template("blog_index.html", articles=articles, current_category=None)
 
 
 @app.route("/blog/categorie/<category_slug>")
 def blog_category(category_slug):
     articles = [
-        article for article in Article.query.filter_by(statut="publie").order_by(Article.published_at.desc()).all()
+        article for article in published_articles().order_by(Article.published_at.desc()).all()
         if article.category_slug == category_slug
     ]
     if not articles:
@@ -616,9 +656,8 @@ def blog_category(category_slug):
 
 @app.route("/blog/<slug>")
 def blog_article(slug):
-    article = Article.query.filter_by(slug=slug, statut="publie").first_or_404()
-    related = Article.query.filter(
-        Article.statut == "publie",
+    article = published_articles().filter(Article.slug == slug).first_or_404()
+    related = published_articles().filter(
         Article.categorie == article.categorie,
         Article.id != article.id
     ).order_by(Article.published_at.desc()).limit(3).all()
@@ -699,8 +738,12 @@ def save_article_from_form(article):
     article.faq_json = json.dumps(faqs, ensure_ascii=False)
     article.statut = "publie" if request.form.get("statut") == "publie" else "brouillon"
 
-    if article.statut == "publie" and not article.published_at:
-        article.published_at = datetime.utcnow()
+    scheduled_at = parse_paris_datetime(request.form.get("published_at_local"))
+    if article.statut == "publie":
+        if scheduled_at:
+            article.published_at = scheduled_at
+        elif not article.published_at:
+            article.published_at = datetime.utcnow()
     if article.statut == "brouillon":
         article.published_at = None
 
@@ -860,7 +903,7 @@ def llms_txt():
     ]
     try:
         articles = (
-            Article.query.filter_by(statut="publie")
+            published_articles()
             .order_by(Article.published_at.desc())
             .all()
         )
@@ -965,7 +1008,7 @@ def sitemap():
     ]
 
     try:
-        for article in Article.query.filter_by(statut="publie").all():
+        for article in published_articles().all():
             modified = article.updated_at or article.published_at
             urls.append((
                 SITE_URL + "/blog/" + article.slug, "monthly", "0.8",
